@@ -19,19 +19,13 @@
     // Render timeline
     if (isset($_GET["search"])) {
       $messages = filterMessagesByContent($connect, $_GET["search"]);
+      $deleteTweet = false;
       require_once "components/timeline.php";
     } else {
       $messages = getAllMessages($connect);
+      $deleteTweet = false;
       require_once "components/timeline.php";
     }
-  }
-
-  if (isset($_POST["message"]) && isset($_SESSION["userID"])) {
-    $message = $_POST["message"];
-    $author = $_SESSION["userID"];
-
-    // Save the message into the database
-    postNewMessage($connect, $author, $message);
   }
 ?>
 

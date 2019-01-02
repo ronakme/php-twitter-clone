@@ -1,19 +1,23 @@
+<?php require_once 'header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Twitter Clone | <?php echo $_GET["user"] ?></title>
+  <title>Twitter Clone | <?php echo getAuthorName($connect, $_GET["user"]); ?></title>
   <!-- Bootstrap styles cdn -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
-  <?php require_once 'header.php'; ?>
   <?php require_once "components/profile_cover.php"; ?>
   <?php
   if (isset($_GET["user"])) {
     $messages = filterMessagesByAuthor($connect, $_GET["user"]);
+    $deleteTweet = false;
+    if ($_SESSION["userID"] == $_GET["user"]) {
+      $deleteTweet = true;
+    }
     require_once "components/timeline.php";
   }
   ?>

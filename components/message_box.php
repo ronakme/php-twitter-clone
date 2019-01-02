@@ -3,7 +3,7 @@ echo<<<_END
 <div class="row my-4">
   <div class="container col-2"></div>
   <div class="container col-8 bg-light p-3">
-    <form action="index.php" method="post">
+    <form action="aux/post_tweet.php" method="post" id="tweetBox">
       <div class="form-group">
         <label for="message">What's happening today?</label>
         <textarea class="form-control" name="message" id="message" rows="3" maxlength="144"></textarea>

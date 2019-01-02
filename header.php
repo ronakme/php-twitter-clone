@@ -3,5 +3,5 @@
 
   session_start();
 
-  if (isset($_SESSION["username"])) require_once'components/navbar.php';
+  require_once'components/navbar.php';
 ?>

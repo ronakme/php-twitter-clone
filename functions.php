@@ -57,6 +57,10 @@
     $db->query("INSERT INTO messages(author, message) VALUES($author, '$message');");
   }
 
+  function deleteMessage($db, $messageID) {
+    $db->query("DELETE FROM messages WHERE id=$messageID ;");
+  }
+
   function getAllMessages($db) {
     $response = $db->query("SELECT * FROM messages");
     return turnQueryToReverseArray($response);
@@ -82,6 +86,39 @@
     return $response->fetch_array(MYSQLI_NUM)[0];
   }
 
+  /**
+   * Add a follow relation into the followers table
+   * @param db: Database connection object
+   * @param follower: Number (user's id)
+   * @param followed: Number (user's id)
+   */
+  function followUser($db, $follower, $followed) {
+    $db->query("INSERT INTO followers(follower, followed) VALUES('$follower', '$followed');");
+  }
+
+  /**
+   * Removes a follow relation from the followers table
+   * @param db: Database connection object
+   * @param follower: Number (user's id)
+   * @param followed: Number (user's id)
+   */
+  function unfollowUser($db, $follower, $followed) {
+    $db->query("DELETE FROM followers WHERE follower=$follower AND followed=$followed ;");
+  }
+
+  function getNumOfFollowers($db, $user) {
+    $response = $db->query("SELECT * FROM followers WHERE followed=$user ;");
+    return $response->num_rows;
+  }
+
+  /**
+   * Returns an array with the id's of the users the current user follows
+   */
+  function checkCurrentUserFollows($db, $user) {
+    $response = $db->query("SELECT followed FROM followers WHERE follower=$user ;");
+    return turnQueryToArray($response);
+  }
+
   function redirect($url) {
     header('Location: ' . $url);
   }
@@ -102,6 +139,16 @@
   //   'Messages',
   //   'author int NOT NULL,
   //   message VARCHAR(144) NOT NULL,
+  //   id int NOT NULL AUTO_INCREMENT,
+  //   PRIMARY KEY (id)'
+  // );
+
+  // Create followers table
+  // createTable(
+  //   $connect,
+  //   'followers',
+  //   'follower int NOT NULL,
+  //   followed int NOT NULL,
   //   id int NOT NULL AUTO_INCREMENT,
   //   PRIMARY KEY (id)'
   // );
