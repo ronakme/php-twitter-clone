@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Twitter clone | Login </title>
+  <title>Twitter clone | Sign up </title>
   <!-- Bootstrap styles cdn -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
@@ -23,44 +23,28 @@
           <label for="password">Password</label>
           <input type="password" class="form-control" name="password" id="password" required>
         </div>
-        <button type="submit" class="btn btn-primary">Log in</button>
+        <button type="submit" class="btn btn-primary">Sign up</button>
       </form>
-      <p class="mt-4">Don't have an account? <a href="signup.php">Sign up</a></p>
+      <p class="mt-4">Already have an account? <a href="login.php">Log in</a></p>
     </div>
     <div class="container col-3"></div>
   </div>
 
   <?php
-
     if (isset($_POST["username"]) && isset($_POST["password"])) {
-      // Grab login values
       $username = $_POST["username"];
       $password = $_POST["password"];
-
-
-      // Query the database with the login values
-      $authQuery = "select * from users where username='$username' and password='$password'";
-      $response = $connect->query($authQuery);
-      if (!$response) die("Database acces failed: " . $connection->error);
-
-      // Returns 0 or 1 to show if the user has authenticated correctly
-      $validUser = $response->num_rows;
-
-      // If user is found set the session variables with the user id so new messages can make use of it
-      if ($validUser == 1) {
-        $userData = $response->fetch_array(MYSQLI_NUM);
-
-        $_SESSION["username"] = $userData[0];
-        $_SESSION["userID"] = $userData[2];
-        // Redirect to homepage
-        redirect("./index.php");
-
+      // Query the database with the login values to create a new user into the database
+      $newUserQuery = "insert into users(username, password) values('$username', '$password');";
+      $response = $connect->query($newUserQuery);
+      if ($response == 1) {
+        $_SESSION["username"] = $username;
+        redirect('./index.php');
       } else {
-        $message = "Invalid username or password";
-        include_once "./components/alert.php";
+        $message = 'The username is already in use';
+        include_once './components/alert.php';
       }
     }
-
   ?>
 
   <!-- Bootstrap scripts -->

@@ -14,6 +14,19 @@
   if ($connect->connect_error) die($connect->connect_error);
 
   /**
+   * Receives a database response and converts it into an array
+   * @param response: mysql response object
+   */
+  function turnQueryToArray($response) {
+    $rows = $response->num_rows;
+    $result = [];
+    for ($i = 0; $i < $rows; $i++) {
+      array_push($result, $response->fetch_array(MYSQLI_NUM));
+    }
+    return $result;
+  }
+
+  /**
    * Checks if a table already exists and if not create it
    * @param $name: String
    * @param $query: String
@@ -23,12 +36,36 @@
   }
 
   function createNewUser($db, $username, $password) {
-    $db->query("insert into users(username, password) values($username, $password);");
+    $db->query("INSERT INTO users(username, password) VALUES('$username', '$password');");
   }
 
   function checkUserAuth($db, $username, $password) {
-    $response = $db->query("select * from users where username=$username and password=$password");
+    $response = $db->query("SELECT * FROM users WHERE username=$username AND password=$password;");
     return $response;
+  }
+
+  function postNewMessage($db, $author, $message) {
+    $db->query("INSERT INTO messages(author, message) VALUES($author, '$message');");
+  }
+
+  function getAllMessages($db) {
+    $response = $db->query("SELECT * FROM messages");
+    return turnQueryToArray($response);
+  }
+
+  /**
+   * Returns all messages that includes the text passed in the filter
+   * @param database: object
+   * @param filter: string
+   */
+  function filterMessagesByContent($db, $filter) {
+    $response = $db->query("SELECT * FROM messages WHERE message LIKE '%$filter%';");
+    return turnQueryToArray($response);
+  }
+
+  function getAuthorName($db, $author) {
+    $response = $db->query("SELECT username FROM users WHERE id=$author;");
+    return $response->fetch_array(MYSQLI_NUM)[0];
   }
 
   function redirect($url) {
@@ -49,8 +86,8 @@
   // createTable(
   //   $connect,
   //   'Messages',
-  //   'author VARCHAR(20),
-  //   message VARCHAR(20),
+  //   'author int NOT NULL,
+  //   message VARCHAR(144) NOT NULL,
   //   id int NOT NULL AUTO_INCREMENT,
   //   PRIMARY KEY (id)'
   // );
