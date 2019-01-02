@@ -26,6 +26,15 @@
     return $result;
   }
 
+  function turnQueryToReverseArray($response) {
+    $rows = $response->num_rows;
+    $result = [];
+    for ($i = 0; $i < $rows; $i++) {
+      array_unshift($result, $response->fetch_array(MYSQLI_NUM));
+    }
+    return $result;
+  }
+
   /**
    * Checks if a table already exists and if not create it
    * @param $name: String
@@ -50,7 +59,7 @@
 
   function getAllMessages($db) {
     $response = $db->query("SELECT * FROM messages");
-    return turnQueryToArray($response);
+    return turnQueryToReverseArray($response);
   }
 
   /**
@@ -60,7 +69,12 @@
    */
   function filterMessagesByContent($db, $filter) {
     $response = $db->query("SELECT * FROM messages WHERE message LIKE '%$filter%';");
-    return turnQueryToArray($response);
+    return turnQueryToReverseArray($response);
+  }
+
+  function filterMessagesByAuthor($db, $author) {
+    $response = $db->query("SELECT * FROM messages WHERE author=$author ;");
+    return turnQueryToReverseArray($response);
   }
 
   function getAuthorName($db, $author) {
