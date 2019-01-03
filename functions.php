@@ -10,7 +10,9 @@
    * @param password
    * @param database
    */
+  global $connect;
   $connect = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
   if ($connect->connect_error) die($connect->connect_error);
 
   /**
@@ -86,6 +88,7 @@
     return $response->fetch_array(MYSQLI_NUM)[0];
   }
 
+  // FOLLOW TABLE FUNCTIONS
   /**
    * Add a follow relation into the followers table
    * @param db: Database connection object
@@ -128,6 +131,20 @@
     $response = $db->query("SELECT * FROM followers WHERE follower=$user1 AND followed=$user2 ;");
     return $response->num_rows;
   }
+
+  // LIKES TABLE FUNCTIONS
+
+  /**
+   *
+   */
+  function likeMessage($db, $user, $msg) {
+    $response = $db->query("INSERT INTO likes(user, message) VALUES('$user', '$msg');");
+    // $arrayResponse = turnQueryToArray($response);
+    // $jsonResponse = json_encode($arrayResponse);
+    echo $response;
+  }
+
+  //  OTHER FUNCTIONS
 
   function redirect($url) {
     header('Location: ' . $url);
