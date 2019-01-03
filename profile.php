@@ -11,16 +11,7 @@
 </head>
 <body>
   <?php require_once "components/profile_cover.php"; ?>
-  <?php
-  if (isset($_GET["user"])) {
-    $messages = filterMessagesByAuthor($connect, $_GET["user"]);
-    $deleteTweet = false;
-    if ($_SESSION["userID"] == $_GET["user"]) {
-      $deleteTweet = true;
-    }
-    require_once "components/timeline.php";
-  }
-  ?>
+  <?php require_once "components/tabs.php"; ?>
 
   <!-- Bootstrap scripts -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

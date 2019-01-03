@@ -1,4 +1,4 @@
-<div class="jumbotron">
+<div class="jumbotron mb-1">
   <h1 class="display-4"><?php echo getAuthorName($connect, $_GET["user"]) ?></h1>
   <p class="lead"><?php echo count(filterMessagesByAuthor($connect, $_GET["user"])) . " tweets"; ?></p>
   <p class="lead"><?php echo getNumOfFollowers($connect, $_GET["user"]) . " followers"; ?></p>

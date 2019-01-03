@@ -1,5 +1,5 @@
 <div class="row my-4">
-  <div class="container col-12 bg-light">
+  <div class="container col-12">
   <?php
   foreach($messages as $value) {
     $author = getAuthorName($connect, $value[0]);

@@ -119,6 +119,16 @@
     return turnQueryToArray($response);
   }
 
+  function getUserFollowers($db, $user) {
+    $response = $db->query("SELECT follower FROM followers WHERE followed=$user ;");
+    return turnQueryToArray($response);
+  }
+
+  function checkIfUserFollowsUser($db, $user1, $user2) {
+    $response = $db->query("SELECT * FROM followers WHERE follower=$user1 AND followed=$user2 ;");
+    return $response->num_rows;
+  }
+
   function redirect($url) {
     header('Location: ' . $url);
   }
@@ -149,6 +159,16 @@
   //   'followers',
   //   'follower int NOT NULL,
   //   followed int NOT NULL,
+  //   id int NOT NULL AUTO_INCREMENT,
+  //   PRIMARY KEY (id)'
+  // );
+
+  // Create likes table
+  // createTable(
+  //   $connect,
+  //   'likes',
+  //   'user int NOT NULL,
+  //   message int NOT NULL,
   //   id int NOT NULL AUTO_INCREMENT,
   //   PRIMARY KEY (id)'
   // );
