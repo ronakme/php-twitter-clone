@@ -1,7 +1,11 @@
-// like function that sends a request to like.php with the user that is
-// giving the like and the message that receives it
 const likeButtons = document.querySelectorAll('.like-btn.btn-success');
-likeButtons.forEach(button => button.addEventListener('click', sendLikeToServer));
+  likeButtons.forEach(button => button.removeEventListener('click', sendLikeToServer));
+  likeButtons.forEach(button => button.addEventListener('click', sendLikeToServer));
+
+  const dislikeButtons = document.querySelectorAll('.like-btn.btn-warning');
+  dislikeButtons.forEach(button => button.removeEventListener('click', removeLikeFromServer));
+  dislikeButtons.forEach(button => button.addEventListener('click', removeLikeFromServer));
+
 
 function sendLikeToServer(e) {
   const { msg, usr } = e.target.dataset;
@@ -15,20 +19,49 @@ function sendLikeToServer(e) {
   })
   .then(res => res.json())
   .then(res => {
-    if (res === 1) displayLike(msg);
+    if (res === 1) toggleLikeButton(msg, true);
   });
 }
 
-function displayLike(id) {
+function removeLikeFromServer(e) {
+  const { msg, usr } = e.target.dataset;
+  const data = new FormData();
+  data.append('from', usr);
+  data.append('to', msg);
+
+  fetch('http://localhost:8080/aux/unlike.php', {
+    "method": "POST",
+    "body": data
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (res === 1) toggleLikeButton(msg, false);
+  });
+}
+
+function restartButtonListener(button, direction) {
+  if (!direction) {
+    button.removeEventListener('click', removeLikeFromServer);
+    button.addEventListener('click', sendLikeToServer);
+  } else {
+    button.removeEventListener('click', sendLikeToServer);
+    button.addEventListener('click', removeLikeFromServer);
+  }
+};
+
+function toggleLikeButton(id, operation) {
   const button = document.querySelector(`button[data-msg="${id}"]`);
   const span = document.querySelector(`span[data-msg="${id}"]`);
 
   // Change button style while the page isn't reloaded
-  button.textContent = "Dislike";
-  button.classList.remove("btn-success");
-  button.classList.add("btn-warning");
+  button.textContent = !operation ? "Like" : "Unlike";
+  button.classList.toggle("btn-success");
+  button.classList.toggle("btn-warning");
 
   // Add one to the likes number while the page isn't reloaded
   let original = +span.textContent;
-  span.textContent = original += 1;
+  span.textContent = operation ? original += 1 : original -= 1;
+
+  // Restart listeners to avoid refreshing the page to click the same button
+  restartButtonListener(button, operation);
 }

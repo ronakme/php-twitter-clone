@@ -20,10 +20,12 @@
     if (isset($_GET["search"])) {
       $messages = filterMessagesByContent($connect, $_GET["search"]);
       $deleteTweet = false;
+      $edit = false;
       require_once "components/timeline.php";
     } else {
-      $messages = getAllMessages($connect);
+      $messages = getMessagesByActiveUser($connect, $_SESSION["userID"]);
       $deleteTweet = false;
+      $edit = false;
       require_once "components/timeline.php";
     }
   }

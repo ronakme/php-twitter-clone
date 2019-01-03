@@ -12,6 +12,7 @@
    if (isset($_GET["user"])) {
     $messages = filterMessagesByAuthor($connect, $_GET["user"]);
     $deleteTweet = false;
+    $edit = true;
     if ($_SESSION["userID"] == $_GET["user"]) {
       $deleteTweet = true;
     }
@@ -25,6 +26,7 @@
     $likes = getUserLikes($connect, $_GET["user"]);
     $messages = turnLikesArrayToMessages($connect, $likes);
     $deleteTweet = false;
+    $edit = false;
     require "components/timeline.php";
   }
   ?>

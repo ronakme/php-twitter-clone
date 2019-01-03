@@ -7,6 +7,7 @@
     $message = $value[1];
     $msgID = $value[2];
     $delete = $deleteTweet;
+    $editMode = $edit;
     include "message.php";
   }
   ?>

@@ -76,6 +76,11 @@
     return turnQueryToReverseArray($response);
   }
 
+  function getMessagesByActiveUser($db, $user) {
+    $response = $db->query("SELECT * FROM messages WHERE author IN (SELECT followed FROM followers WHERE follower=$user) ORDER BY id DESC;");
+    return turnQueryToArray($response);
+  }
+
   /**
    * Returns all messages that includes the text passed in the filter
    * @param database: object
@@ -94,6 +99,11 @@
   function getAuthorName($db, $author) {
     $response = $db->query("SELECT username FROM users WHERE id=$author;");
     return $response->fetch_array(MYSQLI_NUM)[0];
+  }
+
+  function updateMessageContent($db, $msg, $text) {
+    $response = $db->query("UPDATE messages SET message='$text' WHERE id=$msg ;");
+    return $response;
   }
 
   // FOLLOW TABLE FUNCTIONS
@@ -149,6 +159,11 @@
     $response = $db->query("INSERT INTO likes(user, message) VALUES('$user', '$msg');");
     // $arrayResponse = turnQueryToArray($response);
     // $jsonResponse = json_encode($arrayResponse);
+    echo $response;
+  }
+
+  function unlikeMessage($db, $user, $msg) {
+    $response = $db->query("DELETE FROM likes WHERE user=$user AND message=$msg ;");
     echo $response;
   }
 
