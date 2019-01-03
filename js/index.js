@@ -1,6 +1,6 @@
 // like function that sends a request to like.php with the user that is
 // giving the like and the message that receives it
-const likeButtons = document.querySelectorAll('.like-btn');
+const likeButtons = document.querySelectorAll('.like-btn.btn-success');
 likeButtons.forEach(button => button.addEventListener('click', sendLikeToServer));
 
 function sendLikeToServer(e) {
@@ -24,10 +24,11 @@ function displayLike(id) {
   const span = document.querySelector(`span[data-msg="${id}"]`);
 
   // Change button style while the page isn't reloaded
-  button.textContent = "Unfollow";
+  button.textContent = "Dislike";
   button.classList.remove("btn-success");
   button.classList.add("btn-warning");
 
   // Add one to the likes number while the page isn't reloaded
-  span.textContent += 1;
+  let original = +span.textContent;
+  span.textContent = original += 1;
 }

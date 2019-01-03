@@ -15,12 +15,19 @@
     if ($_SESSION["userID"] == $_GET["user"]) {
       $deleteTweet = true;
     }
-    require_once "components/timeline.php";
+    require "components/timeline.php";
   }
   ?>
   </div>
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-
+  <?php
+   if (isset($_GET["user"])) {
+    $likes = getUserLikes($connect, $_GET["user"]);
+    $messages = turnLikesArrayToMessages($connect, $likes);
+    $deleteTweet = false;
+    require "components/timeline.php";
+  }
+  ?>
   </div>
   <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
     <?php

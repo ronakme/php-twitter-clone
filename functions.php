@@ -37,6 +37,14 @@
     return $result;
   }
 
+  function extractValuesFromNestedArray($array) {
+    $newArray = [];
+    foreach ($array as $value) {
+      array_push($newArray, $value[0]);
+    }
+    return $newArray;
+  }
+
   /**
    * Checks if a table already exists and if not create it
    * @param $name: String
@@ -142,6 +150,31 @@
     // $arrayResponse = turnQueryToArray($response);
     // $jsonResponse = json_encode($arrayResponse);
     echo $response;
+  }
+
+  function checkIfMessageHasLike($db, $user, $msg) {
+    $response = $db->query("SELECT * FROM likes WHERE user=$user AND message=$msg ;");
+    return $response->num_rows;
+  }
+
+  function getMessageLikes($db, $msg) {
+    $response = $db->query("SELECT * FROM likes WHERE message=$msg");
+    return $response->num_rows;
+  }
+
+  function getUserLikes($db, $user) {
+    $response = $db->query("SELECT message FROM likes WHERE user=$user ;");
+    $arrayResponse = turnQueryToArray($response);
+    return extractValuesFromNestedArray($arrayResponse);
+  }
+
+  function turnLikesArrayToMessages($db, $likes) {
+    $response = [];
+    foreach($likes as $like) {
+      $content = $db->query("SELECT * FROM messages WHERE id=$like");
+      array_push($response, $content->fetch_array(MYSQLI_NUM));
+    }
+    return $response;
   }
 
   //  OTHER FUNCTIONS
