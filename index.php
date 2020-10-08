@@ -39,4 +39,8 @@
   <?php if (isset($_SESSION["userID"])) echo '<script src="js/index.js"></script>'; ?>
   <script src="js/message_counter.js"></script>
 </body>
+  <footer>
+  <p>Author: Ronak Gupta</p>
+  <p><a href="http://rexo.xyz">Exampe</a></p>
+</footer>
 </html>
